@@ -12,7 +12,7 @@ int main(void)
     memset(&gpio_led, 0, sizeof(gpio_led));
     /*1. Initialize*/
     gpio_led.pGPIOx = GPIOB;
-    gpio_led.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_14;
+    gpio_led.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_7;
     gpio_led.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
     gpio_led.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_LOW;
     gpio_led.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
@@ -50,7 +50,7 @@ void EXTI15_10_IRQHandler (void)
     //handle the interrupt
     GPIO_IRQHandling(GPIO_PIN_NO_13);
 
-    GPIO_ToggleOutputPin(GPIOB, GPIO_PIN_NO_14);
+    GPIO_ToggleOutputPin(GPIOB, GPIO_PIN_NO_7);
 }
 
 void delay(void)

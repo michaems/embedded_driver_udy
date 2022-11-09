@@ -1,5 +1,6 @@
-"./Src/003_button_interrupt.o"
+"./Src/006_spi_tx_testing.o"
 "./Src/syscalls.o"
 "./Src/sysmem.o"
 "./Startup/startup_stm32f767zitx.o"
+"./drivers/src/stm32f767_spi_driver.o"
 "./drivers/src/stm32f767xx_gpio_driver.o"

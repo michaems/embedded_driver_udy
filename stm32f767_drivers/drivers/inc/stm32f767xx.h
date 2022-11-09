@@ -159,7 +159,7 @@ typedef struct _rcc_regdef_t
     __vo uint32_t DCKCFGR2;
 }RCC_RegDef_t;
 
-typedef struct exti_regdef_t
+typedef struct _exti_regdef_t
 {
     __vo uint32_t IMR;
     __vo uint32_t EMR;
@@ -170,7 +170,7 @@ typedef struct exti_regdef_t
 
 }EXTI_RegDef_t;
 
-typedef struct syscfg_regdef_t
+typedef struct _syscfg_regdef_t
 {
     __vo uint32_t MEMRMP;
     __vo uint32_t PMC;
@@ -179,6 +179,35 @@ typedef struct syscfg_regdef_t
     __vo uint32_t CBR;
     __vo uint32_t CMPCR;
 }SYSCFG_RegDef_t;
+
+typedef struct _spi_regdef_t
+{
+    __vo uint32_t CR1;
+    __vo uint32_t CR2;
+    __vo uint32_t SR;
+    __vo uint32_t DR;
+    __vo uint32_t CRCPR;
+    __vo uint32_t RXCRCR;
+    __vo uint32_t TXCRCR;
+    __vo uint32_t I2SCFGR;
+    __vo uint32_t I2SPR;
+}SPI_RegDef_t;
+
+typedef struct _spi_config_t
+{
+    uint8_t SPI_DeviceMode;
+    uint8_t SPI_BusConfig;
+    uint8_t SPI_SclkSpeed;
+    uint8_t SPI_CPOL;
+    uint8_t SPI_CPHA;
+    uint8_t SPI_SSM;
+}SPI_Config_t;
+
+typedef struct _spi_handle_t
+{
+    SPI_RegDef_t *pSPIx;
+    SPI_Config_t SPIConfig;
+}SPI_Handle_t;
 
 #define GPIOA ((GPIO_RegDef_t *)GPIOA_BASEADDR)
 #define GPIOB ((GPIO_RegDef_t *)GPIOB_BASEADDR)
@@ -203,18 +232,6 @@ typedef struct syscfg_regdef_t
 #define GPIOC_PCLK_EN() (RCC->AHB1ENR |= (1 << 2))
 #define GPIOD_PCLK_EN() (RCC->AHB1ENR |= (1 << 3))
 
-#define I2C1_PCLK_EN() (RCC->APB1ENR |= (1 << 21))
-#define I2C2_PCLK_EN() (RCC->APB1ENR |= (1 << 22))
-#define I2C3_PCLK_EN() (RCC->APB1ENR |= (1 << 23))
-
-
-#define SPI1_PCLK_EN() (RCC->APB2ENR |= (1 << 12))
-
-#define SYSCFG_PCLK_EN() (RCC->APB2ENR |= (1 << 14))
-
-/*CLOCK DISABLE*/
-#define GPIOA_PCLK_DI() (RCC->AHB1ENR &= ~(1 << 0))
-
 /*GPIO RESET*/
 #define GPIOA_REG_RESET() do { (RCC->AHB1RSTR |= (1 << 0)); (RCC->AHB1RSTR &= ~(1 << 0)); } while(0)
 #define GPIOB_REG_RESET() do { (RCC->AHB1RSTR |= (1 << 1)); (RCC->AHB1RSTR &= ~(1 << 1)); } while(0)
@@ -228,6 +245,26 @@ typedef struct syscfg_regdef_t
 #define GPIOJ_REG_RESET() do { (RCC->AHB1RSTR |= (1 << 9)); (RCC->AHB1RSTR &= ~(1 << 9)); } while(0)
 #define GPIOK_REG_RESET() do { (RCC->AHB1RSTR |= (1 << 10)); (RCC->AHB1RSTR &= ~(1 << 10)); } while(0)
 
+#define I2C1_PCLK_EN() (RCC->APB1ENR |= (1 << 21))
+#define I2C2_PCLK_EN() (RCC->APB1ENR |= (1 << 22))
+#define I2C3_PCLK_EN() (RCC->APB1ENR |= (1 << 23))
+
+
+
+#define SPI1_PCLK_EN() (RCC->APB2ENR |= (1 << 12))
+
+#define SPI2_PCLK_EN() (RCC->APB1ENR |= (1 << 14))
+#define SPI3_PCLK_EN() (RCC->APB1ENR |= (1 << 15))
+
+/*Add RESET macros later*/
+
+#define SYSCFG_PCLK_EN() (RCC->APB2ENR |= (1 << 14))
+
+/*CLOCK DISABLE*/
+#define GPIOA_PCLK_DI() (RCC->AHB1ENR &= ~(1 << 0))
+
+
+
 /*IRQ Numbers*/
 #define IRQ_NUM_EXTI0 6
 #define IRQ_NUM_EXTI1 7
@@ -240,5 +277,56 @@ typedef struct syscfg_regdef_t
 /*IRQ Priorities*/
 #define NVIC_IRQ_PRI0  0
 #define NVIC_IRQ_PRI15 15
+
+/*SPI definitions*/
+#define SPI1 ((SPI_RegDef_t*)SPI1_BASEADDR)
+#define SPI2 ((SPI_RegDef_t*)SPI2_BASEADDR)
+#define SPI3 ((SPI_RegDef_t*)SPI3_BASEADDR)
+
+/*SPI Device Modes*/
+#define SPI_DEVICE_MODE_MASTER 1
+#define SPI_DEVICE_MODE_SLAVE  0
+
+#define SPI_BUS_CONFIG_FD               1 //FULL DUPLEX
+#define SPI_BUS_CONFIG_HD               2 //HALF DUPLEX
+#define SPI_BUS_CONFIG_SIMPLEX_RX_ONLY  3
+
+/*SPI Speed*/
+#define SPI_SCLK_SPEED_DIV_2   0
+#define SPI_SCLK_SPEED_DIV_4   1
+#define SPI_SCLK_SPEED_DIV_8   2
+#define SPI_SCLK_SPEED_DIV_16  3
+#define SPI_SCLK_SPEED_DIV_32  4
+#define SPI_SCLK_SPEED_DIV_64  5
+#define SPI_SCLK_SPEED_DIV_128 6
+#define SPI_SCLK_SPEED_DIV_256 7
+
+/*DFF*/
+#define SPI_DFF_8_BITS  0
+#define SPI_DFF_16_BITs 1
+
+/*CPOL*/
+#define SPI_CPOL_HIGH 1
+#define SPI_CPOL_LOW  0
+
+/*CPHA*/
+#define SPI_CPHA_HIGH 1
+#define SPI_CPHA_LOW  0
+
+/*SSM Software Slave Management*/
+#define SPI_SSM_EN 1
+#define SPI_SSM_DI 0
+
+//bit positions of SPI CR1 register
+#define SPI_CR1_CPHA_BIT 0
+#define SPI_CR1_CPOL_BIT 1
+#define SPI_CR1_MSTR_BIT 2
+#define SPI_CR1_BAUD_RATE_CTRL_BIT 3
+#define SPI_CR1_SPE_BIT 6
+#define SPI_CR1_SSI_BIT 8
+#define SPI_CR1_SSM_BIT 9
+#define SPI_CR1_RXONLY_BIT   10
+#define SPI_CR1_BIDIMODE_BIT 15
+
 
 #endif /* INC_STM32F767XX_H_ */

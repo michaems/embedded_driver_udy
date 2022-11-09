@@ -3,6 +3,9 @@
 
 void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 {
+    /*Enable the clock*/
+    GPIO_PeriClkCtrl(pGPIOHandle->pGPIOx, ENABLE);
+
     uint32_t tmp = 0;
     //1. configure the mode
     if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <= GPIO_MODE_ANLG)
