@@ -207,7 +207,23 @@ typedef struct _spi_handle_t
 {
     SPI_RegDef_t *pSPIx;
     SPI_Config_t SPIConfig;
+    uint8_t *pTxBuffer;
+    uint8_t *pRxBuffer;
+    uint32_t TxLen;
+    uint32_t RxLen;
+    uint8_t  TxState;
+    uint8_t  RxState;
 }SPI_Handle_t;
+
+#define SPI_READY      0
+#define SPI_BUSY_IN_RX 1
+#define SPI_BUSY_IN_TX 2
+
+/*Possible SPI application events*/
+#define SPI_EVENT_TX_CMPLT 1
+#define SPI_EVENT_RX_CMPLT 2
+#define SPI_EVENT_OVR_ERR  3
+#define SPI_EVENT_CRC_ERR  4
 
 #define GPIOA ((GPIO_RegDef_t *)GPIOA_BASEADDR)
 #define GPIOB ((GPIO_RegDef_t *)GPIOB_BASEADDR)
@@ -274,6 +290,14 @@ typedef struct _spi_handle_t
 #define IRQ_NUM_EXTI9_5 23
 #define IRQ_NUM_EXTI15_10 40
 
+#define IRQ_NUM_SPI1 35
+#define IRQ_NUM_SPI2 36
+#define IRQ_NUM_SPI3 51
+
+#define IRQ_NUM_SPI4 84
+#define IRQ_NUM_SPI5 85
+#define IRQ_NUM_SPI6 86
+
 /*IRQ Priorities*/
 #define NVIC_IRQ_PRI0  0
 #define NVIC_IRQ_PRI15 15
@@ -328,5 +352,12 @@ typedef struct _spi_handle_t
 #define SPI_CR1_RXONLY_BIT   10
 #define SPI_CR1_BIDIMODE_BIT 15
 
+#define SPI_CR2_ERRIE_BIT  5
+#define SPI_CR2_RXNEIE_BIT 6
+#define SPI_CR2_TXEIE_BIT  7
+
+#define SPI_SR_RXNE_BIT 0
+#define SPI_SR_TXE_BIT  1
+#define SPI_SR_OVR_BIT  6
 
 #endif /* INC_STM32F767XX_H_ */
