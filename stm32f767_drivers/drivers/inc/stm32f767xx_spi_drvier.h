@@ -4,6 +4,28 @@
 #include <stddef.h>
 #include "stm32f767xx.h"
 
+typedef struct _spi_config_t
+{
+    uint8_t SPI_DeviceMode;
+    uint8_t SPI_BusConfig;
+    uint8_t SPI_SclkSpeed;
+    uint8_t SPI_CPOL;
+    uint8_t SPI_CPHA;
+    uint8_t SPI_SSM;
+}SPI_Config_t;
+
+typedef struct _spi_handle_t
+{
+    SPI_RegDef_t *pSPIx;
+    SPI_Config_t SPIConfig;
+    uint8_t *pTxBuffer;
+    uint8_t *pRxBuffer;
+    uint32_t TxLen;
+    uint32_t RxLen;
+    uint8_t  TxState;
+    uint8_t  RxState;
+}SPI_Handle_t;
+
 void SPI_Init(SPI_Handle_t *pSPIHandle);
 void SPI_DeInit(SPI_RegDef_t *pSPIOx);
 

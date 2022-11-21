@@ -69,6 +69,7 @@
 #define I2C1_BASEADDR (APB1PERIPH_BASE +0x5400)
 #define I2C2_BASEADDR (APB1PERIPH_BASE +0x5800)
 #define I2C3_BASEADDR (APB1PERIPH_BASE +0x5C00)
+#define I2C4_BASEADDR (APB1PERIPH_BASE +0x6000)
 
 #define SPI2_BASEADDR (APB1PERIPH_BASE +0x3800)
 #define SPI3_BASEADDR (APB1PERIPH_BASE +0x3C00)
@@ -167,7 +168,6 @@ typedef struct _exti_regdef_t
     __vo uint32_t FTSR;
     __vo uint32_t SWIER;
     __vo uint32_t PR;
-
 }EXTI_RegDef_t;
 
 typedef struct _syscfg_regdef_t
@@ -193,27 +193,36 @@ typedef struct _spi_regdef_t
     __vo uint32_t I2SPR;
 }SPI_RegDef_t;
 
-typedef struct _spi_config_t
+typedef struct _i2c_regdef_t
 {
-    uint8_t SPI_DeviceMode;
-    uint8_t SPI_BusConfig;
-    uint8_t SPI_SclkSpeed;
-    uint8_t SPI_CPOL;
-    uint8_t SPI_CPHA;
-    uint8_t SPI_SSM;
-}SPI_Config_t;
+    __vo uint32_t CR1;
+    __vo uint32_t CR2;
+    __vo uint32_t OAR1;
+    __vo uint32_t OAR2;
+    __vo uint32_t TIMINGR;
+    __vo uint32_t TIMOUTR;
+    __vo uint32_t ISR;
+    __vo uint32_t ICR;
+    __vo uint32_t PECR;
+    __vo uint32_t RXDR;
+    __vo uint32_t TXDR;
+}I2C_RegDef_t;
 
-typedef struct _spi_handle_t
+typedef struct _usart_regdef_t
 {
-    SPI_RegDef_t *pSPIx;
-    SPI_Config_t SPIConfig;
-    uint8_t *pTxBuffer;
-    uint8_t *pRxBuffer;
-    uint32_t TxLen;
-    uint32_t RxLen;
-    uint8_t  TxState;
-    uint8_t  RxState;
-}SPI_Handle_t;
+    __vo uint32_t CR1;
+    __vo uint32_t CR2;
+    __vo uint32_t CR3;
+    __vo uint32_t BRR;
+    __vo uint32_t GTPR;
+    __vo uint32_t RTOR;
+    __vo uint32_t RQR;
+    __vo uint32_t ISR;
+    __vo uint32_t ICR;
+    __vo uint32_t RDR;
+    __vo uint32_t TDR;
+}USART_RegDef_t;
+
 
 #define SPI_READY      0
 #define SPI_BUSY_IN_RX 1
@@ -271,6 +280,12 @@ typedef struct _spi_handle_t
 
 #define SPI2_PCLK_EN() (RCC->APB1ENR |= (1 << 14))
 #define SPI3_PCLK_EN() (RCC->APB1ENR |= (1 << 15))
+
+/*USART enable/disable*/
+#define USART1_PCLK_EN() (RCC->APB2ENR |= (1 << 4))
+#define USART2_PCLK_EN() (RCC->APB1ENR |= (1 << 17))
+#define USART3_PCLK_EN() (RCC->APB1ENR |= (1 << 18))
+#define USART6_PCLK_EN() (RCC->APB2ENR |= (1 << 5))
 
 /*Add RESET macros later*/
 
@@ -359,5 +374,136 @@ typedef struct _spi_handle_t
 #define SPI_SR_RXNE_BIT 0
 #define SPI_SR_TXE_BIT  1
 #define SPI_SR_OVR_BIT  6
+
+/*I2C definitions*/
+#define I2C1 ((I2C_RegDef_t *)I2C1_BASEADDR)
+#define I2C2 ((I2C_RegDef_t *)I2C2_BASEADDR)
+#define I2C3 ((I2C_RegDef_t *)I2C3_BASEADDR)
+
+/*I2C CR1 bit positions*/
+#define I2C_CR1_PE_BIT   0
+#define I2C_CR1_TXIE_BIT 1
+#define I2C_CR1_RXIE_BIT 2
+#define I2C_CR1_ADDRIE_BIT 3
+#define I2C_CR1_NACKIE_BIT 4
+#define I2C_CR1_STOPIE_BIT 5
+#define I2C_CR1_TCIE_BIT   6
+#define I2C_CR1_ERRIE_BIT  7
+#define I2C_CR1_DNF_POS_BIT 8
+#define I2C_CR1_ANFOFF_BIT  12
+#define I2C_CR1_SBC_BIT     16
+
+/*I2C CR2 bit positions*/
+#define I2C_CR2_RDWRN_BIT 10
+#define I2C_CR2_ADD10_BIT 11
+#define I2C_CR2_HEAD10_BIT 12
+#define I2C_CR2_START_BIT 13
+#define I2C_CR2_STOP_BIT  14
+#define I2C_CR2_NACK_BIT  15
+#define I2C_CR2_RELOAD_BIT 24
+#define I2C_CR2_AUTOEND_BIT 25
+#define I2C_CR2_PECBYTE_BIT 26
+
+/*USART definitions*/
+#define USART1 ((USART_RegDef_t *)USART1_BASEADDR)
+#define USART2 ((USART_RegDef_t *)USART2_BASEADDR)
+#define USART3 ((USART_RegDef_t *)USART3_BASEADDR)
+#define USART6 ((USART_RegDef_t *)USART6_BASEADDR)
+
+/*USART register bits*/
+#define USART_CR1_UE_BIT     0
+#define USART_CR1_UESM_BIT   1
+#define USART_CR1_RE_BIT     2
+#define USART_CR1_TE_BIT     3
+#define USART_CR1_IDLEIE_BIT 4
+#define USART_CR1_RXNEIE_BIT 5
+#define USART_CR1_TCIE_BIT   6
+#define USART_CR1_TXEIE_BIT  7
+#define USART_CR1_PEIE_BIT   8
+#define USART_CR1_PS_BIT     9
+#define USART_CR1_PCE_BIT    10
+#define USART_CR1_WAKE_BIT   11
+#define USART_CR1_M0_BIT     12
+#define USART_CR1_MME_BIT    13
+#define USART_CR1_CMIE_BIT   14
+#define USART_CR1_OVER8_BIT  15
+#define USART_CR1_DEDT_BIT   16
+#define USART_CR1_DEAT_BIT   21
+#define USART_CR1_RTOIE_BIT  26
+#define USART_CR1_EOBIE_BIT  27
+#define USART_CR1_M1_BIT     28
+
+#define USART_CR1_UE_BITMASK     (1 << USART_CR1_UE_BIT)
+#define USART_CR1_UESM_BITMASK   (1 << USART_CR1_UESM_BIT)
+#define USART_CR1_RE_BITMASK     (1 << USART_CR1_RE_BIT)
+#define USART_CR1_TE_BITMASK     (1 << USART_CR1_TE_BIT)
+#define USART_CR1_IDLEIE_BITMASK (1 << 4)
+#define USART_CR1_RXNEIE_BITMASK (1 << 5)
+#define USART_CR1_TCIE_BITMASK   (1 << 6)
+#define USART_CR1_TXEIE_BITMASK  (1 << 7)
+#define USART_CR1_PEIE_BITMASK   (1 << 8)
+#define USART_CR1_PS_BITMASK     (1 << 9)
+#define USART_CR1_PCE_BITMASK    (1 << 10)
+#define USART_CR1_WAKE_BITMASK   (1 << 11)
+#define USART_CR1_M0_BITMASK     (1 << 12)
+#define USART_CR1_MME_BITMASK    (1 << 13)
+#define USART_CR1_CMIE_BITMASK   (1 << 14)
+#define USART_CR1_OVER8_BITMASK  (1 << 15)
+#define USART_CR1_DEDT_BITMASK   (1 << 16)
+#define USART_CR1_DEAT_BITMASK   (1 << 21)
+#define USART_CR1_RTOIE_BITMASK  (1 << 26)
+#define USART_CR1_EOBIE_BITMASK  (1 << 27)
+#define USART_CR1_M1_BITMASK     (1 << 28)
+
+/*Interrupt and status register bits*/
+#define USART_ISR_PE_BIT 0
+#define USART_ISR_FE_BIT 1
+#define USART_ISR_NF_BIT 2
+#define USART_ISR_ORE_BIT 3
+#define USART_ISR_IDLE_BIT 4
+#define USART_ISR_RXNE_BIT 5
+#define USART_ISR_TC_BIT 6
+#define USART_ISR_TXE_BIT 7
+#define USART_ISR_LBDF_BIT 8
+#define USART_ISR_CTSIF_BIT 9
+#define USART_ISR_CTS_BIT 10
+#define USART_ISR_RTOF_BIT 11
+#define USART_ISR_EOBF_BIT 12
+#define USART_ISR_ABRE_BIT 14
+#define USART_ISR_ABRF_BIT 15
+#define USART_ISR_BUSY_BIT 16
+#define USART_ISR_CMF_BIT 17
+#define USART_ISR_SBKF_BIT 18
+#define USART_ISR_RWU_BIT 19
+#define USART_ISR_WUF_BIT 20
+#define USART_ISR_TEACK_BIT 21
+#define USART_ISR_REACK_BIT 22
+#define USART_ISR_TCBGT_BIT 25
+
+#define USART_ISR_PE_BITMASK   (1 << 0)
+#define USART_ISR_FE_BITMASK   (1 << 1)
+#define USART_ISR_NF_BITMASK   (1 << 2)
+#define USART_ISR_ORE_BITMASK  (1 << 3)
+#define USART_ISR_IDLE_BITMASK (1 << 4)
+#define USART_ISR_RXNE_BITMASK (1 << 5)
+#define USART_ISR_TC_BITMASK   (1 << 6)
+#define USART_ISR_TXE_BITMASK  (1 << 7)
+#define USART_ISR_LBDF_BITMASK (1 << 8)
+#define USART_ISR_CTSIF_BITMASK (1 << 9)
+#define USART_ISR_CTS_BITMASK  (1 << 10)
+#define USART_ISR_RTOF_BITMASK (1 << 11)
+#define USART_ISR_EOBF_BITMASK (1 << 12)
+#define USART_ISR_ABRE_BITMASK (1 << 14)
+#define USART_ISR_ABRF_BITMASK (1 << 15)
+#define USART_ISR_BUSY_BITMASK (1 << 16)
+#define USART_ISR_CMF_BITMASK  (1 << 17)
+#define USART_ISR_SBKF_BITMASK (1 << 18)
+#define USART_ISR_RWU_BITMASK  (1 << 19)
+#define USART_ISR_WUF_BITMASK  (1 << 20)
+#define USART_ISR_TEACK_BITMASK (1 << 21)
+#define USART_ISR_REACK_BITMASK (1 << 22)
+#define USART_ISR_TCBGT_BITMASK (1 << 25)
+
+
 
 #endif /* INC_STM32F767XX_H_ */
